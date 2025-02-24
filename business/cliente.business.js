@@ -38,8 +38,31 @@ const buscarClienteIdAsync = async (idCliente) => {
   return cliente;
 };
 
+const modificarClienteAsync = async (clienteConModificaciones) => {
+  const modificacionExitosa = await clienteRepository.modificarClienteAsync(
+    clienteConModificaciones
+  );
+
+  return modificacionExitosa;
+};
+
+const eliminarClienteIdAsync = async (idCliente) => {
+  const eliminacionExitosa = await clienteRepository.eliminarClienteIdAsync(
+    idCliente
+  );
+  return eliminacionExitosa;
+};
+
+const obtenerClientes = async () => {
+  const clientes = await clienteRepository.obtenerClientesAsync();
+  return clientes;
+};
+
 module.exports = {
   agregarClienteAsync,
   buscarClienteAsync,
   buscarClienteIdAsync,
+  modificarClienteAsync,
+  eliminarClienteIdAsync,
+  obtenerClientes,
 };

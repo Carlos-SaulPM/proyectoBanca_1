@@ -83,10 +83,13 @@ const agregarClienteAsync = async (cliente) => {
   }
 };
 
-const eliminarClienteAsync = async (clienteId) => {
+const eliminarClienteIdAsync = async (clienteId) => {
   try {
     const db = await conectarDB();
     const clienteActual = await obtenerClienteIdAsync(clienteId);
+    console.log(clienteId);
+    if (clienteActual === null) return null;
+
     clienteActual.estaActivo = false;
     await modificarClienteAsync(clienteActual);
   } catch (error) {
@@ -95,28 +98,33 @@ const eliminarClienteAsync = async (clienteId) => {
   }
 };
 
-const modificarClienteAsync = async (cliente) => {
+const modificarClienteAsync = async (clienteConModificaciones) => {
   try {
     const db = await conectarDB();
-    const clienteActual = await obtenerProductoID(cliente.id);
-
-    console.log("Repositorio", cliente);
+    const clienteActual = await obtenerClienteIdAsync(
+      clienteConModificaciones.id
+    );
     if (clienteActual === null) {
-      console.log(`No se encontró el cliente con ID ${cliente.id}`);
-      return;
+      console.log(
+        `No se encontró el cliente con ID ${clienteConModificaciones.id}`
+      );
+      return null;
     }
 
     const datosAActualizar = {};
-    Object.keys(cliente).forEach((key) => {
-      if (cliente[key] !== clienteActual[key]) {
-        datosAActualizar[key] = cliente[key];
+    Object.keys(clienteConModificaciones).forEach((key) => {
+      if (clienteConModificaciones[key] !== clienteActual[key]) {
+        datosAActualizar[key] = clienteConModificaciones[key];
       }
     });
-    console.log("Repositorio: ", datosAActualizar);
+    //console.log("Repositorio: ", datosAActualizar);
     const resultado = await db
       .collection(collection)
-      .updateOne({ id: Number(cliente.id) }, { $set: datosAActualizar });
-    console.log(resultado);
+      .updateOne(
+        { id: Number(clienteConModificaciones.id) },
+        { $set: datosAActualizar }
+      );
+
     return resultado;
   } catch (error) {
     console.log(`Ocurrio un error en la eliminación del cliente: ${error}`);
@@ -128,7 +136,7 @@ module.exports = {
   obtenerClientesAsync,
   obtenerClienteIdAsync,
   agregarClienteAsync,
-  eliminarClienteAsync,
+  eliminarClienteIdAsync,
   modificarClienteAsync,
   obtenerClienteEncodeKeyAsync,
 };
