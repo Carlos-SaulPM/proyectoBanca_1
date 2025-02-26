@@ -1,0 +1,127 @@
+<%- include("../partials/header") %> <br /><br /><br />
+<h2>Clientes</h2>
+<br />
+<div class="container">
+  <div class="row">
+    <div class="d-flex justify-content-between align-items-center">
+      <!-- Botón Agregar -->
+      <button type="button" class="btn btn-primary">Agregar</button>
+
+      <!-- Input y botón de búsqueda alineados -->
+      <div class="d-flex align-items-center" style="width: 280px;">
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          placeholder="Buscar cliente"
+          style="height: 38px;"
+        />
+        <button class="btn btn-outline-secondary ms-2" type="button" id="button-addon2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 50 50"
+          >
+            <path
+              d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Apellido paterno</th>
+      <th scope="col">Apellido materno</th>
+      <th scope="col">Fecha de nacimiento</th>
+      <th scope="col">RFC</th>
+      <th scope="col" colspan="1">Fecha de registro</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%clientes.forEach((cliente)=>{ %>
+      
+    <tr>
+      <td scope="row"><%=cliente.id%></td>
+      <td><%=cliente.nombre%></td>
+      <td><%=cliente.primerApellido%></td>
+      <td><%=cliente.segundoApellido%></td>
+      <td><%=cliente.fechaDeNacimiento%></td>
+      <td><%=cliente.encodedKey%></td>
+      <td><%=cliente.fechaDeRegistro%></td>
+      <td>
+        <a href="/editar/<%= cliente.id %>"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="30"
+            height="30"
+            viewBox="0 0 48 48"
+          >
+            <path
+              fill="#c94f60"
+              d="M42.583,9.067l-3.651-3.65c-0.555-0.556-1.459-0.556-2.015,0l-1.718,1.72l5.664,5.664l1.72-1.718	C43.139,10.526,43.139,9.625,42.583,9.067"
+            ></path>
+            <path
+              fill="#f0f0f0"
+              d="M6.905,35.43L5,43l7.571-1.906l0.794-6.567L6.905,35.43z"
+            ></path>
+            <path
+              fill="#edbe00"
+              d="M36.032,17.632l-23.46,23.461l-5.665-5.665l23.46-23.461L36.032,17.632z"
+            ></path>
+            <linearGradient
+              id="YoPixpDbHWOyk~b005eF1a_OWRPl8fxkRvG_gr1"
+              x1="35.612"
+              x2="35.612"
+              y1="7.494"
+              y2="17.921"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0" stop-color="#dedede"></stop>
+              <stop offset="1" stop-color="#d6d6d6"></stop>
+            </linearGradient>
+            <path
+              fill="url(#YoPixpDbHWOyk~b005eF1a_OWRPl8fxkRvG_gr1)"
+              d="M30.363,11.968l4.832-4.834l5.668,5.664l-4.832,4.834L30.363,11.968z"
+            ></path>
+            <path
+              fill="#787878"
+              d="M5.965,39.172L5,43l3.827-0.965L5.965,39.172z"
+            ></path>
+          </svg>
+        </a>
+      </td>
+      <td>
+        <a href="/editar/<%= cliente.id %>"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="30"
+            height="30"
+            viewBox="0 0 50 50"
+            style="fill: #fa5252"
+          >
+            <path
+              d="M 21 2 C 19.354545 2 18 3.3545455 18 5 L 18 7 L 8 7 A 1.0001 1.0001 0 1 0 8 9 L 9 9 L 9 45 C 9 46.654 10.346 48 12 48 L 38 48 C 39.654 48 41 46.654 41 45 L 41 9 L 42 9 A 1.0001 1.0001 0 1 0 42 7 L 32 7 L 32 5 C 32 3.3545455 30.645455 2 29 2 L 21 2 z M 21 4 L 29 4 C 29.554545 4 30 4.4454545 30 5 L 30 7 L 20 7 L 20 5 C 20 4.4454545 20.445455 4 21 4 z M 19 14 C 19.552 14 20 14.448 20 15 L 20 40 C 20 40.553 19.552 41 19 41 C 18.448 41 18 40.553 18 40 L 18 15 C 18 14.448 18.448 14 19 14 z M 25 14 C 25.552 14 26 14.448 26 15 L 26 40 C 26 40.553 25.552 41 25 41 C 24.448 41 24 40.553 24 40 L 24 15 C 24 14.448 24.448 14 25 14 z M 31 14 C 31.553 14 32 14.448 32 15 L 32 40 C 32 40.553 31.553 41 31 41 C 30.447 41 30 40.553 30 40 L 30 15 C 30 14.448 30.447 14 31 14 z"
+            ></path></svg
+        ></a>
+      </td>
+    </tr>
+
+    <% } ); %>
+  </tbody>
+</table>
+<%- include("../partials/footer") %>
