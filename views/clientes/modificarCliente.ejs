@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+
+<form action="/clientes/modificar" method="post">
+  <div class="mb-3">
+    <input
+      type="hidden"
+      class="form-control"
+      id="id"
+      value="<%=cliente.id%>"
+      name="id"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="nombre" class="form-label">Nombre</label>
+    <input
+      type="text"
+      class="form-control"
+      id="nombre"
+      value="<%=cliente.nombre%>"
+      name="nombre"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="primerApellido" class="form-label">Apellido paterno</label>
+    <input
+      type="text"
+      class="form-control"
+      id="primerApellido"
+      value="<%= cliente.primerApellido %>"
+      name="primerApellido"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="segundoApellido" class="form-label">Apellido materno</label>
+    <input
+      type="text"
+      class="form-control"
+      id="segundoApellido"
+      value="<%= cliente.segundoApellido %>"
+      name="segundoApellido"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="fechaDeNacimiento" class="form-label"
+      >Fecha de nacimiento</label
+    >
+    <input
+      type="date"
+      class="form-control"
+      id="fechaDeNacimiento"
+      value="<%= cliente.fechaDeNacimiento %>"
+      name="fechaDeNacimiento"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="rfc" class="form-label">RFC</label>
+    <input
+      type="text"
+      class="form-control"
+      id="RFC"
+      placeholder="<%= cliente.encodedKey %>"
+      aria-label="Disabled"
+      name="rfc"
+      disabled
+    />
+  </div>
+  <input type="submit" value="Enviar" class="btn-primary mb-3">
+</form>
+
+<%- include('../partials/footer') %>

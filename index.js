@@ -21,7 +21,6 @@ app.use(express.json());
 app.set("view engine", "ejs");
 
 app.use("/api", clienteRouter);
-
 app.use("/", clienteViewRouter);
 
 

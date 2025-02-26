@@ -11,7 +11,6 @@ const obtenerClientes = async (req, res) => {
 
 
 const modificarCliente = async (req, res) => {
-  req.body.id = Number(req.params.id)
   let cliente = clienteBusiness.buscarClienteAsync(req.body)
   if (!cliente) {
     res.render("partials/error404");
@@ -19,15 +18,35 @@ const modificarCliente = async (req, res) => {
   }
   let respuesta = await clienteBusiness.modificarClienteAsync(cliente)
   if (!respuesta) {
-    res.render("/partials/eror404")
+    res.render("partials/error404")
     return
   }
 
-  res.redirect("/")
+  res.redirect("/");
 }
 
+const modificarClienteView = async (req, res) => {
+  let cliente = await clienteBusiness.buscarClienteIdAsync(req.params.id)
+  if (!cliente) {
+    res.render("partials/error404");
+    return;
+  }
+  
+  res.render("clientes/modificarCliente", { cliente });
+};
+
+const eliminarCliente = async (req,res) => {
+  const respuesta = clienteBusiness.eliminarClienteIdAsync(req.params.id);
+  if (!respuesta) {
+    res.render("partials/error404");
+  }
+
+  res.redirect("/");
+}
 
 module.exports = {
   obtenerClientes,
-  modificarCliente
+  modificarCliente,
+  modificarClienteView,
+  eliminarCliente
 }
