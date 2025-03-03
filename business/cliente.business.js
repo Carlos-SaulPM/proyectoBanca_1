@@ -53,8 +53,13 @@ const eliminarClienteIdAsync = async (idCliente) => {
   return eliminacionExitosa;
 };
 
-const obtenerClientes = async () => {
-  const clientes = await clienteRepository.obtenerClientesAsync();
+const obtenerClientes = async (pagina, limite) => {
+  const clientes = await clienteRepository.obtenerClientesAsync(pagina, limite);
+  
+  if (!clientes.lista || clientes.lista.length === 0) {
+    console.log("No se encontraron los clientes");
+    return null;
+  }
   return clientes;
 };
 

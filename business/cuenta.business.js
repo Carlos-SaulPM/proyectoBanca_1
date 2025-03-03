@@ -1,0 +1,1 @@
+const cuentaRepository = require("../repositories")

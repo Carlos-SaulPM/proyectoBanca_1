@@ -42,7 +42,21 @@ const eliminarCliente = async (req, res) => {
 };
 
 const obtenerClientes = async (req, res) => {
-  let clientes = await clienteBusiness.obtenerClientes();
+  let pagina = Number(req.query.pagina) || 1;
+  let limite = Number(req.query.limite) || 10;
+
+  if (pagina <= 0 && limite <= 0) {
+    console.log("Ingresa una pagina o limite valido");
+    res.status(404).json({error: "Pagina o limite invalido"})
+    return;
+  }
+
+  let clientes = await clienteBusiness.obtenerClientes(pagina, limite);
+  if (!clientes) {
+    res.status(404).json({ error: "No hay clientes" });
+    return;
+  }
+  
   res.status(200).json(clientes);
 };
 

@@ -6,24 +6,25 @@ const client = new MongoClient(uri);
 const collection = "Clientes";
 
 async function conectarDB() {
-  try {
+  if (!client.topology || !client.topology.isConnected()) {
     await client.connect();
     console.log("✅ Conectado a MongoDB");
-    return client.db("Banco");
-  } catch (error) {
-    console.error("❌ Error de conexión:", error);
-    process.exit(1);
   }
+  return client.db("Banco");
 }
 
-async function obtenerClientesAsync() {
+async function obtenerClientesAsync(pagina, limite) {
   try {
     const db = await conectarDB();
     const lista = await db
       .collection(collection)
-      .find({ estaActivo: true })
+      .find({estaActivo: true})
+      .skip((pagina - 1) * limite)
+      .limit(limite)
       .toArray();
-    return lista;
+    const totalDocumentos = await db.collection(collection).countDocuments();
+
+    return { pagina, limite, totalDocumentos, totalPaginas: Math.ceil(totalDocumentos/limite), lista};
   } catch (error) {
     console.error("❌ Error al obtener los clientes:", error);
     throw error;

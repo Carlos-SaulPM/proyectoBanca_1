@@ -1,5 +1,5 @@
 const { MongoClient } = require("mongodb");
-
+const uri = process.env.DB_URL;
 const client = new MongoClient(uri);
 const collection = "Cuentas";
 
@@ -42,7 +42,7 @@ const crearCuentaAsync = async (cuenta) => {
 const obtenerCuentaEncodedKeyAsync = async (encodedKey) => {
   try {
     const db = await conectarDB();
-    const cuenta = await db.collection(collection).findOne({encodedKey: Number(encodedKey), estaActivo: true})
+    const cuenta = await db.collection(collection).findOne({encodedKey: encodedKey, estaActivo: true})
     return cuenta;
   } catch (error) {
     console.log(`Ocurrio un error para encontrar la cuenta: ${encodedKey}`);
@@ -81,3 +81,5 @@ const modificarCuentaAsync = async (cuentaCambios) => {
     throw error;
   }
 };
+
+module.exports = {crearCuentaAsync, obtenerCuentaEncodedKeyAsync,modificarCuentaAsync}

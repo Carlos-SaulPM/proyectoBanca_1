@@ -1,3 +1,4 @@
 const clienteRepository = require("./cliente.repository")
+const cuentaRepository = require("./cuenta.repository");
 
-module.exports ={clienteRepository}
+module.exports ={clienteRepository, cuentaRepository}
