@@ -12,66 +12,65 @@ const conectarDB = async () => {
     console.log(`Ocurrio un error: ${error}`);
     process.exit(1);
   }
-}
+};
 
-const crearCuentaAsync = async (cuenta) => {
+const crearCuenta = async (cuenta) => {
   try {
     const db = await conectarDB();
     let totalDocumentos = await db.collection(collection).countDocuments();
     let id = totalDocumentos + 1;
-    await db.collection(collection).insertOne(
-      {
-        id,
-        encodedkey: cuenta.encodedkey,
-        clienteEncodedKey: cuenta.clienteEncodedkey,
-        nombre: cuenta.nombre,
-        total: cuenta.total,
-        interes: cuenta.interes,
-        fechaDeRegistro: cuenta.fechaDeRegistro,
-        estaActivo: true,
-        otros: cuenta.otros
-      }
-    )
+    await db.collection(collection).insertOne({
+      id,
+      encodedkey: cuenta.encodedkey,
+      clienteEncodedKey: cuenta.clienteEncodedkey,
+      nombre: cuenta.nombre,
+      total: cuenta.total,
+      interes: cuenta.interes,
+      fechaDeRegistro: cuenta.fechaDeRegistro,
+      estaActivo: true,
+      otros: cuenta.otros,
+    });
   } catch (error) {
-    console.log(`Error en la reacion de la cuenta: ${error}`)
+    console.log(`Error en la reacion de la cuenta: ${error}`);
     throw error;
-    
   }
-}
+};
 
-const obtenerCuentaEncodedKeyAsync = async (encodedKey) => {
+const obtenerCuentaConNumeroDeCuenta = async (numeroDeCuenta) => {
   try {
     const db = await conectarDB();
-    const cuenta = await db.collection(collection).findOne({encodedKey: encodedKey, estaActivo: true})
+    const cuenta = await db
+      .collection(collection)
+      .findOne({
+        "cuenta.otros.numeroDeCuenta": numeroDeCuenta,
+        estaActivo: true,
+      });
     return cuenta;
   } catch (error) {
-    console.log(`Ocurrio un error para encontrar la cuenta: ${encodedKey}`);
+    console.log(`Ocurrio un error para encontrar la cuenta: ${numeroDeCuenta}`);
     throw error;
   }
-}
+};
 
-const modificarCuentaAsync = async (cuentaCambios) => {
+const modificarCuenta = async (cuentaCambios) => {
   try {
     const db = await conectarDB();
-    const cuentaActual = await obtenerCuentaEncodedKeyAsync(cuentaCambios.encodedKey);
-    // Falta controlar la cuenta vacia
+    const cuentaActual = await obtenerCuentaConNumeroDeCuenta(
+      cuentaCambios.otros.numeroDeCuenta
+    );
 
-    const datosAActualizar = {};
-    Object.entries(cuentaCambios).forEach(([key, value]) => {
-      if (cuentaActual[key] !== value) {
-        datosAActualizar[key] = value;
-      }
-    });
-
-    if (Object.keys(datosAActualizar).length === 0) {
-      console.log("No hay cambios para actualizar.");
-      return null;
+    const propiedadesPermitidas = ["nombre", "total", "tasa", "otros.interes"];
+    const datosAActualizar= {}
+    for (const propiedad of propiedadesPermitidas) {
+      if (cuentaActual[propiedad] !== cuentaCambios[propiedad]) {
+        datosAActualizar[propiedad] = cuentaCambios[propiedad];
+     }
     }
-
+    
     const resultado = await db
       .collection(collection)
       .updateOne(
-        { encodedKey: cuentaCambios.encodedKey },
+        { encodedKey: cuentaActual.encodedKey },
         { $set: datosAActualizar }
       );
 
@@ -82,4 +81,23 @@ const modificarCuentaAsync = async (cuentaCambios) => {
   }
 };
 
-module.exports = {crearCuentaAsync, obtenerCuentaEncodedKeyAsync,modificarCuentaAsync}
+const obtenerTodasLasCuentas = async () => {
+  try {
+    const db = await conectarDB();
+    const todasLasCuentas = await db.collection(collection).find({ estaActivo: true }).toArray();
+    return todasLasCuentas;
+  } catch (error) {
+    console.log(`Ocurrió un error al obtener las cuentas: ${error}`)
+  }
+}
+
+const eliminarCuenta = async (numeroDeCuenta) => {
+  
+}
+
+module.exports = {
+  crearCuenta,
+  obtenerCuentaConNumeroDeCuenta,
+  modificarCuenta,
+  obtenerTodasLasCuentas
+};
