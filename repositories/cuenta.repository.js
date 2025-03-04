@@ -5,12 +5,14 @@ const collection = "Cuentas";
 
 const conectarDB = async () => {
   try {
-    await client.connect();
-    console.log("DB conectada");
+    if (!client.topology || !client.topology.isConnected()) {
+      await client.connect();
+      console.log("✅ Conectado a MongoDB");
+    }
     return client.db("Banco");
   } catch (error) {
     console.log(`Ocurrio un error: ${error}`);
-    process.exit(1);
+    throw error;
   }
 };
 
@@ -39,12 +41,10 @@ const crearCuenta = async (cuenta) => {
 const obtenerCuentaConNumeroDeCuenta = async (numeroDeCuenta) => {
   try {
     const db = await conectarDB();
-    const cuenta = await db
-      .collection(collection)
-      .findOne({
-        "cuenta.otros.numeroDeCuenta": numeroDeCuenta,
-        estaActivo: true,
-      });
+    const cuenta = await db.collection(collection).findOne({
+      "cuenta.otros.numeroDeCuenta": numeroDeCuenta,
+      estaActivo: true,
+    });
     return cuenta;
   } catch (error) {
     console.log(`Ocurrio un error para encontrar la cuenta: ${numeroDeCuenta}`);
@@ -59,14 +59,20 @@ const modificarCuenta = async (cuentaCambios) => {
       cuentaCambios.otros.numeroDeCuenta
     );
 
-    const propiedadesPermitidas = ["nombre", "total", "tasa", "otros.interes"];
-    const datosAActualizar= {}
+    const propiedadesPermitidas = [
+      "nombre",
+      "total",
+      "tasa",
+      "otros.interes",
+      "estaActivo",
+    ];
+    const datosAActualizar = {};
     for (const propiedad of propiedadesPermitidas) {
       if (cuentaActual[propiedad] !== cuentaCambios[propiedad]) {
         datosAActualizar[propiedad] = cuentaCambios[propiedad];
-     }
+      }
     }
-    
+
     const resultado = await db
       .collection(collection)
       .updateOne(
@@ -84,20 +90,32 @@ const modificarCuenta = async (cuentaCambios) => {
 const obtenerTodasLasCuentas = async () => {
   try {
     const db = await conectarDB();
-    const todasLasCuentas = await db.collection(collection).find({ estaActivo: true }).toArray();
+    const todasLasCuentas = await db
+      .collection(collection)
+      .find({ estaActivo: true })
+      .toArray();
     return todasLasCuentas;
   } catch (error) {
-    console.log(`Ocurrió un error al obtener las cuentas: ${error}`)
+    console.log(`Ocurrió un error al obtener las cuentas: ${error}`);
   }
-}
+};
 
 const eliminarCuenta = async (numeroDeCuenta) => {
-  
-}
+  try {
+    const db = await conectarDB();
+    const cuenta = await obtenerCuentaConNumeroDeCuenta(numeroDeCuenta);
+    cuenta.estaActivo = false;
+    const eliminacionCorrecta = await modificarCuenta(cuenta);
+    return eliminacionCorrecta;
+  } catch (error) {
+    console.log(`Ocurrio un error en la eliminación de la cuenta: ${error}`);
+  }
+};
 
 module.exports = {
   crearCuenta,
   obtenerCuentaConNumeroDeCuenta,
   modificarCuenta,
-  obtenerTodasLasCuentas
+  obtenerTodasLasCuentas,
+  eliminarCuenta,
 };
