@@ -1,7 +1,9 @@
 const { cuentaRepository, clienteRepository } = require("../repositories");
+const {CuentaAhorro} = require("../models")
 
-const crearCuenta = async (cliente) => {
-  let existeCliente = await clienteRepository.obtenerClienteEncodeKeyAsync(
+const crearCuenta = async (reqBody) => {
+  const cliente = new CuentaAhorro()
+  const existeCliente = await clienteRepository.obtenerClienteEncodeKeyAsync(
     cliente.encodedKey
   );
   if (!existeCliente) {
@@ -9,26 +11,26 @@ const crearCuenta = async (cliente) => {
     return null;
   }
 
-  let cuentaCreada = await cuentaRepository.crearCuenta(cliente);
+  const cuentaCreada = await cuentaRepository.crearCuenta(cliente);
   if (!cuentaCreada.acknowledged || cuentaCreada.code) {
     console.log(`Ocurrio un error en la creacion de la cuenta`);
     return null;
   }
 
-  return {
-    seCreoLaCuenta: cuentaCreada.acknowledged,
-    idCuenta: cuentaCreada.insertedId,
-  };
+  cuentaCreada.seCreoLaCuenta = cuentaCreada.acknowledged;
+  cuentaCreada.idCuenta = cuentaCreada.insertedId;
+
+  return cuentaCreada;
 };
 
 const obtenerCuentas = async () => {
   let cuentas = await cuentaRepository.obtenerCuentas();
-  if (!cuentas)return null;
+  if (!cuentas) return null;
   return cuentas;
 };
 
 const modificarCuenta = async (cuenta) => {
-  let cuentaAModificar = await cuentaRepository.obtenerCuentaConNumeroDeCuenta(
+  const cuentaAModificar = await cuentaRepository.obtenerCuentaConNumeroDeCuenta(
     cuenta.otros.numeroDeCuenta
   );
   if (!cuentaAModificar) {
@@ -38,13 +40,14 @@ const modificarCuenta = async (cuenta) => {
     return null;
   }
 
-  let modificandoCuenta = await cuentaRepository.modificarCuenta(cuenta);
+  const modificandoCuenta = await cuentaRepository.modificarCuenta(cuenta);
   if (!modificandoCuenta || modificandoCuenta.matchedCount === 0) {
     console.log(`No se encontro la cuenta: ${cuenta.otros.numeroDeCuenta}`);
     return null;
   }
 
-  return true;
+  modificandoCuenta.seModificoLaCuenta = modificandoCuenta.acknowledged;
+  return modificandoCuenta;
 };
 
 const eliminarCuenta = async (cuenta) => {
@@ -56,7 +59,7 @@ const eliminarCuenta = async (cuenta) => {
     return null;
   }
 
-  return true;
+  return eliminarCuenta;
 };
 
 module.exports = {

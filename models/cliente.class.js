@@ -14,3 +14,5 @@ class Cliente {
     this.fechaDeRegistro = new Date();
   }
 }
+
+module.exports = Cliente;

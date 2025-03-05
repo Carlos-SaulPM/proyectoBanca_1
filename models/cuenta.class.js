@@ -1,4 +1,4 @@
-class Ahorro {
+class CuentaAhorro {
   nombre;
   total;
   interes;
@@ -17,6 +17,8 @@ class Ahorro {
     this.fechaDeRegistro = new Date();
     this.otros = otros;
   }
+
+  
 }
 
-module.exports = Ahorro;
+module.exports = CuentaAhorro;
