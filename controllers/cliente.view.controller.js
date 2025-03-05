@@ -1,4 +1,4 @@
-const { clienteBusiness } = require("../business");
+const { clienteBusiness, cuentaBusiness } = require("../business");
 
 const obtenerClientes = async (req, res) => {
 let pagina = Number(req.query.pagina) || 1;
@@ -9,6 +9,7 @@ let pagina = Number(req.query.pagina) || 1;
     res.status(404).json({error: "Pagina o limite invalido"})
     return;
   }
+
 
   let clientes = await clienteBusiness.obtenerClientes(pagina, limite);
   if (!clientes) {
@@ -28,8 +29,16 @@ const eliminarCliente = async (req, res) => {
   }
 }
 
+const detalleCliente = async (req, res) => {
+  const cliente = await clienteBusiness.buscarClienteIdAsync(req.params.id)
+  const ahorros = await cuentaBusiness.obtenerCuentasPorCliente(cliente.encodedKey) 
+  console.log(ahorros)
+  res.render("clientes/detalles", {cliente, ahorros});
+}
+
 
 module.exports = {
   obtenerClientes,
   eliminarCliente,
+  detalleCliente,
 };

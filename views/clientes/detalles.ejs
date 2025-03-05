@@ -1,0 +1,54 @@
+<%- include("../partials/header") %>
+<p>Nombre: <%= cliente.nombre %></p>
+<p>Primer apellido: <%= cliente.primerApellido %></p>
+<p>Segundo apellido: <%= cliente.segundoApellido %></p>
+<p>fecha de nacimiento: <%= cliente.fechaDeNacimiento %></p>
+<p>fecha de registro: <%= cliente.fechaDeRegistro %></p>
+
+<a href="/cuentas/crear?clienteId=<%= cliente.encodedKey %>"
+  >Crear Cuenta de Ahorro</a
+>
+
+<ul class="nav nav-tabs" role="tablist">
+  <!-- Verificar si hay mas de un ahorro-->
+  <% if (ahorros.length>0) { %>
+  <li class="nav-item" role="presentation">
+    <a
+      class="nav-link active"
+      data-bs-toggle="tab"
+      href="#<%=ahorros[0].id%>"
+      aria-selected="true"
+      role="tab"
+      ><%= ahorros[0].nombre %></a
+    >
+  </li>
+  <% } %> <% for( let index = 1; index < ahorros.length; index++ ) { %>
+  <li class="nav-item" role="presentation">
+    <a
+      class="nav-link"
+      data-bs-toggle="tab"
+      href="#<%=ahorros[index].id%>"
+      aria-selected="false"
+      role="tab"
+      ><%= ahorros[index].nombre %></a
+    >
+  </li>
+  <% } %>
+</ul>
+<div id="myTabContent" class="tab-content">
+  <% if (ahorros.length>0) { %>
+  <div
+    class="tab-pane fade active show"
+    id="<%= ahorros[0].id %>"
+    role="tabpanel"
+  >
+    <p><%= ahorros[0].nombre %></p>
+  </div>
+  <% } %> <% for( let index = 1; index < ahorros.length; index++ ) { %>
+  <div class="tab-pane fade" id="<%=ahorros[index].id%>" role="tabpanel">
+    <p><%= ahorros[index].total %></p>
+  </div>
+  <% } %>
+</div>
+
+<%- include("../partials/footer") %>

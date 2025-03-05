@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const { tieneSoloNumeros } = require("../helpers/utilidades");
 
 const uri = process.env.DB_URL;
 const client = new MongoClient(uri);
@@ -18,13 +19,19 @@ async function obtenerClientesAsync(pagina, limite) {
     const db = await conectarDB();
     const lista = await db
       .collection(collection)
-      .find({estaActivo: true})
+      .find({ estaActivo: true })
       .skip((pagina - 1) * limite)
       .limit(limite)
       .toArray();
     const totalDocumentos = await db.collection(collection).countDocuments();
 
-    return { pagina, limite, totalDocumentos, totalPaginas: Math.ceil(totalDocumentos/limite), lista};
+    return {
+      pagina,
+      limite,
+      totalDocumentos,
+      totalPaginas: Math.ceil(totalDocumentos / limite),
+      lista,
+    };
   } catch (error) {
     console.error("❌ Error al obtener los clientes:", error);
     throw error;
@@ -34,9 +41,16 @@ async function obtenerClientesAsync(pagina, limite) {
 async function obtenerClienteIdAsync(idCliente) {
   try {
     const db = await conectarDB();
-    const cliente = await db
-      .collection(collection)
-      .findOne({ id: Number(idCliente), estaActivo: true });
+    let cliente;
+    if (tieneSoloNumeros(idCliente)) {
+      cliente = await db
+        .collection(collection)
+        .findOne({ id: Number(idCliente), estaActivo: true });
+    } else {
+      cliente = await db
+        .collection(collection)
+        .findOne({ encodedKey: idCliente, estaActivo: true });
+    }
     return cliente;
   } catch (error) {
     console.error(

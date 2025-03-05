@@ -3,7 +3,9 @@ const express = require("express");
 require("dotenv").config();
 const morgan = require("morgan");
 const path = require("path")
-const { clienteRouter, clienteViewRouter, cuentasRouter } = require("./routers")
+const bodyparser = require("body-parser")
+
+const { clienteRouter, clienteViewRouter, cuentasRouter, cuentaViewRouter } = require("./routers")
 //Servicios
 
 //Configuraciones y constantes
@@ -18,11 +20,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Middlewares
 app.use(express.json());
+app.use(bodyparser.urlencoded({extended: true})); //Requerido para ver el body y pasarlo al EJS
 app.set("view engine", "ejs");
+
 
 app.use("/api", clienteRouter);
 app.use("/api", cuentasRouter);
 app.use("/", clienteViewRouter);
+app.use("/", cuentaViewRouter);
 
 
 

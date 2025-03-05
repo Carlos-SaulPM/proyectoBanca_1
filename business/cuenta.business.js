@@ -1,17 +1,17 @@
 const { cuentaRepository, clienteRepository } = require("../repositories");
-const {CuentaAhorro} = require("../models")
 
-const crearCuenta = async (reqBody) => {
-  const cliente = new CuentaAhorro()
+
+const crearCuenta = async (cuenta) => {
+  
   const existeCliente = await clienteRepository.obtenerClienteEncodeKeyAsync(
-    cliente.encodedKey
+    cuenta.clienteEncodedKey
   );
   if (!existeCliente) {
-    console.log(`No existe el cliente con el encodedKey ${cliente.encodedKey}`);
+    console.log(`No existe el cliente con el encodedKey ${cuenta.encodedKey}`);
     return null;
   }
 
-  const cuentaCreada = await cuentaRepository.crearCuenta(cliente);
+  const cuentaCreada = await cuentaRepository.crearCuenta(cuenta);
   if (!cuentaCreada.acknowledged || cuentaCreada.code) {
     console.log(`Ocurrio un error en la creacion de la cuenta`);
     return null;
@@ -25,6 +25,12 @@ const crearCuenta = async (reqBody) => {
 
 const obtenerCuentas = async () => {
   let cuentas = await cuentaRepository.obtenerCuentas();
+  if (!cuentas) return null;
+  return cuentas;
+};
+
+const obtenerCuentasPorCliente = async (clienteId) => {
+  let cuentas = await cuentaRepository.obtenerCuentasPorCliente(clienteId);
   if (!cuentas) return null;
   return cuentas;
 };
@@ -67,4 +73,5 @@ module.exports = {
   obtenerCuentas,
   modificarCuenta,
   eliminarCuenta,
+  obtenerCuentasPorCliente
 };
