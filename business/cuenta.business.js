@@ -1,7 +1,7 @@
 const { cuentaRepository, clienteRepository } = require("../repositories");
 
 const crearCuenta = async (cliente) => {
-  let existeCliente = await clienteRepository.obtenerClienteEncodeKey(
+  let existeCliente = await clienteRepository.obtenerClienteEncodeKeyAsync(
     cliente.encodedKey
   );
   if (!existeCliente) {
@@ -15,14 +15,15 @@ const crearCuenta = async (cliente) => {
     return null;
   }
 
-  return true;
+  return {
+    seCreoLaCuenta: cuentaCreada.acknowledged,
+    idCuenta: cuentaCreada.insertedId,
+  };
 };
 
 const obtenerCuentas = async () => {
-  let cuentas = await cuentaRepository.obtenerTodasLasCuentas();
-  if (!cuentas) {
-    return null;
-  }
+  let cuentas = await cuentaRepository.obtenerCuentas();
+  if (!cuentas)return null;
   return cuentas;
 };
 

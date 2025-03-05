@@ -21,7 +21,7 @@ const crearCuenta = async (cuenta) => {
     const db = await conectarDB();
     let totalDocumentos = await db.collection(collection).countDocuments();
     let id = totalDocumentos + 1;
-    await db.collection(collection).insertOne({
+    const cuentaCreada = await db.collection(collection).insertOne({
       id,
       encodedkey: cuenta.encodedkey,
       clienteEncodedKey: cuenta.clienteEncodedkey,
@@ -32,6 +32,7 @@ const crearCuenta = async (cuenta) => {
       estaActivo: true,
       otros: cuenta.otros,
     });
+    return cuentaCreada;
   } catch (error) {
     console.log(`Error en la reacion de la cuenta: ${error}`);
     throw error;
@@ -87,7 +88,7 @@ const modificarCuenta = async (cuentaCambios) => {
   }
 };
 
-const obtenerTodasLasCuentas = async () => {
+const obtenerCuentas = async () => {
   try {
     const db = await conectarDB();
     const todasLasCuentas = await db
@@ -116,6 +117,6 @@ module.exports = {
   crearCuenta,
   obtenerCuentaConNumeroDeCuenta,
   modificarCuenta,
-  obtenerTodasLasCuentas,
+  obtenerCuentas,
   eliminarCuenta,
 };
