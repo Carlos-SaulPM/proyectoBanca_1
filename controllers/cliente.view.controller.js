@@ -32,7 +32,7 @@ const eliminarCliente = async (req, res) => {
 const detalleCliente = async (req, res) => {
   const cliente = await clienteBusiness.buscarClienteIdAsync(req.params.id)
   const ahorros = await cuentaBusiness.obtenerCuentasPorCliente(cliente.encodedKey) 
-  console.log(ahorros)
+  // console.log(ahorros)
   res.render("clientes/detalles", {cliente, ahorros});
 }
 

@@ -18,7 +18,7 @@ const conectarDB = async () => {
 
 const crearCuenta = async (cuenta) => {
   try {
-    console.log("Repositorio cuentas: ", cuenta)
+    //console.log("Repositorio cuentas: ", cuenta)
     const db = await conectarDB();
     let totalDocumentos = await db.collection(collection).countDocuments();
     let id = totalDocumentos + 1;

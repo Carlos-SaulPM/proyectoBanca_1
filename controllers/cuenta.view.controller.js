@@ -9,7 +9,7 @@ const crearCuenta = async (req, res) => {
 
 const guardarCuenta = async (req,res) => {
   let ahorro = new CuentaAhorro(req.body.nombre, req.body.clienteEncodedKey);
-  console.log("controller view cuenta: ", ahorro);
+  // console.log("controller view cuenta: ", ahorro);
   await cuentaBusiness.crearCuenta(ahorro)
   
   res.redirect("/clientes/detalles/"+ req.body.clienteEncodedKey)
