@@ -14,6 +14,7 @@ class CuentaAhorro {
     this.total = 0;
     this.interes = 0;
     this.fechaDeRegistro = new Date();
+    this.estaActivo = true;
   }
 
   

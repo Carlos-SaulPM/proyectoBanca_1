@@ -11,7 +11,7 @@ let pagina = Number(req.query.pagina) || 1;
   }
 
 
-  let clientes = await clienteBusiness.obtenerClientes(pagina, limite);
+  let clientes = await clienteBusiness.obtenerClientesAsync(pagina, limite);
   if (!clientes) {
     res.render("partials/error404");
     return;

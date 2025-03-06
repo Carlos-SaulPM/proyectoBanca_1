@@ -51,7 +51,7 @@ const obtenerClientes = async (req, res) => {
     return;
   }
 
-  let clientes = await clienteBusiness.obtenerClientes(pagina, limite);
+  let clientes = await clienteBusiness.obtenerClientesAsync(pagina, limite);
   if (!clientes) {
     res.status(404).json({ error: "No hay clientes" });
     return;
